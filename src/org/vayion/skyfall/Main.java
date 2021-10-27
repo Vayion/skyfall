@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -28,8 +27,6 @@ import org.vayion.skyfall.listeners.GameListeners;
 import org.vayion.skyfall.listeners.LobbyListeners;
 
 public class Main extends JavaPlugin {
-	private ArrayList<Player> red;
-	private ArrayList<Player> blue;
 	private boolean started;
 	private Flag flagA;
 	private Flag flagB;
@@ -52,9 +49,8 @@ public class Main extends JavaPlugin {
 	private boolean finished = false;
 	
 
-	private ItemStack[] blueInv;
-	private ItemStack[] redInv;
 	private FileManager fileManager;
+	private TeamManager teamManager;
 	
 	
 	@Override
@@ -73,8 +69,6 @@ public class Main extends JavaPlugin {
 		this.getCommand("setLobbySpawn").setExecutor(new SetLobbySpawn(this));
 		
 		
-		red = new ArrayList<Player>();
-		blue = new ArrayList<Player>();
 		
 		flagA = new Flag(this);
 		flagB = new Flag(this);
@@ -89,46 +83,38 @@ public class Main extends JavaPlugin {
 		scoreboard = sManager.getNewScoreboard();
 		objective = scoreboard.registerNewObjective(ChatColor.GREEN+"Skyfall", "dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		teamManager = new TeamManager(this);
 		
-		Score score = objective.getScore("Test");
-		score.setScore(2);
 		
 		scoreBlue = 0;
 		scoreRed = 0;
 		started = false;
 		
 		fileManager = new FileManager(this);
-		fileManager.loadArena();
 	}
 	
 	@Override
 	public void onDisable() {
 		System.out.println("[Skyfall] Saving Locations");
 		
-		if(Math.random() < 0.5) {
-			fileManager.setSpawn1(spawn2);
-		}else {fileManager.setSpawn2(spawn1);}
+		fileManager.setSpawn1(spawn1);
+		fileManager.setSpawn2(spawn2);
 
 		fileManager.save();
 		
 	}
 	
 	public void addToBlue(Player player) {
-		if (red.contains(player)) {red.remove(player);}
-		if (blue.contains(player)) {blue.remove(player);}
-		blue.add(player);
-		player.sendMessage(ChatColor.BLUE+"Joined Team Blue.");
+		teamManager.addToBlue(player);
 	}
 	
 	public void addToRed(Player player) {
-		if (blue.contains(player)) {blue.remove(player);}
-		if (red.contains(player)) {red.remove(player);}
-		red.add(player);
-		player.sendMessage(ChatColor.RED+"Joined Team Red.");
+		teamManager.addToRed(player);
+	}
+	public Scoreboard getScoreboard() {
+		return scoreboard;
 	}
 	
-	public ArrayList<Player> getTeamRed(){return red;}
-	public ArrayList<Player> getTeamBlue(){return blue;}
 	
 	public boolean start() {
 		if(started) {return false;}
@@ -145,15 +131,10 @@ public class Main extends JavaPlugin {
 		HandlerList.unregisterAll(lobbyListeners);
 		this.getServer().getPluginManager().registerEvents(gameListeners, this);
 		
-		for (int r = 0; r < red.size(); r++) {
-			sendToSpawn(red.get(r), true);
-		}
-   		 
-   	 	for (int b = 0; b < blue.size(); b++) {
-   	 		sendToSpawn(blue.get(b), false);
-   	 	}
 
 		lobbyListeners.disableEdit();
+		
+		teamManager.start();
 		
 		
 		return true;
@@ -172,8 +153,8 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void addToScoreBoard() {
-		red.forEach(player -> player.setScoreboard(scoreboard));
-		blue.forEach(player -> player.setScoreboard(scoreboard));
+		teamManager.getRed().forEach(player -> player.setScoreboard(scoreboard));
+		teamManager.getBlue().forEach(player -> player.setScoreboard(scoreboard));
 	}
 	
 	public void manageScore() {
@@ -215,20 +196,23 @@ public class Main extends JavaPlugin {
 		}, (20));
 	}
 	
-	public void setBlueInv(PlayerInventory inventory) {blueInv = inventory.getContents();}
-	public void setRedInv(PlayerInventory inventory) {redInv = inventory.getContents();}
+	public void setBlueInv(PlayerInventory inventory) {teamManager.setBlueInv(inventory.getContents());}
+	public void setRedInv(PlayerInventory inventory) {teamManager.setRedInv(inventory.getContents());}
 
-	public void setBlueInv(ItemStack[] items) {blueInv = items;}
-	public void setRedInv(ItemStack[] items) {redInv = items;}
+	public void setBlueInv(ItemStack[] items) {teamManager.setBlueInv(items);}
+	public void setRedInv(ItemStack[] items) {teamManager.setRedInv(items);}
 	
-	public ItemStack[] getBlueInv() {return blueInv;}
-	public ItemStack[] getRedInv() {return redInv;}
+	public ItemStack[] getBlueInv() {return teamManager.getBlueInv();}
+	public ItemStack[] getRedInv() {return teamManager.getRedInv();}
 	
 	public void setSpawn1(Location loc) {spawn1=loc;}
 	public void setSpawn2(Location loc) {spawn2=loc;}
 	
 	public Location getSpawn1() {return spawn1;}
 	public Location getSpawn2() {return spawn2;}
+	
+	public ArrayList<Player> getTeamRed(){return teamManager.getRed();}
+	public ArrayList<Player> getTeamBlue(){return teamManager.getBlue();}
 	
 	public void generateScoreboard(Status a, Status b, Status c) {
 		
@@ -273,8 +257,8 @@ public class Main extends JavaPlugin {
 		}
 		
 		
-
-		scoreboard = sManager.getNewScoreboard();
+		
+		objective.unregister();
 		objective = scoreboard.registerNewObjective(ChatColor.GREEN+"Skyfall", "dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
@@ -295,26 +279,6 @@ public class Main extends JavaPlugin {
 	}
 	
 	
-	/*
-	 * true = red, false = blue
-	 */
-	public void sendToSpawn(Player player, boolean red) {
-		player.setGameMode(GameMode.SURVIVAL);
-		if(red) {
-			player.getInventory().setContents(redInv);
-			player.updateInventory();
-			player.teleport(spawn1);
-		}
-		else {
-			player.getInventory().setContents(blueInv);
-			player.updateInventory();
-			player.teleport(spawn2);
-		}
-		player.setHealth(20);
-		player.setFoodLevel(20);
-		player.setFireTicks(0);
-	}
-	
 	public void doSpawnFlips() {
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
@@ -334,6 +298,8 @@ public class Main extends JavaPlugin {
 	
 	public Location getLobbySpawn() {return lobbySpawn;}
 	
-	
+	public TeamManager getTeamManager() {
+		return teamManager;
+	}
 	
 }

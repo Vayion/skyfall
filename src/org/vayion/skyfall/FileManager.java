@@ -73,9 +73,9 @@ public class FileManager {
 	}
 	
 	public void loadArena() {
-		if(config.get("spawn1")!=null){main.setSpawn1((Location)config.get("spawn1"));}
-		if(config.get("spawn2")!=null){main.setSpawn2((Location)config.get("spawn2"));}
-		if(config.get("spawnLobby")!=null){main.setLobby((Location)config.get("spawnLobby"));}
+		if(config.get("spawn1")!=null){main.setSpawn1((Location)config.get("spawn1"));Bukkit.getLogger().info("Loaded Spawn 1");}
+		if(config.get("spawn2")!=null){main.setSpawn2((Location)config.get("spawn2"));Bukkit.getLogger().info("Loaded Spawn 2");}
+		if(config.get("spawnLobby")!=null){main.setLobby((Location)config.get("spawnLobby"));Bukkit.getLogger().info("Loaded Lobby Spawn");}
 
 		try {
 			ItemStack[] items = new ItemStack[41];
@@ -83,6 +83,7 @@ public class FileManager {
 				items[i]=(ItemStack)config.get("redItem"+i);
 			}
 			main.setRedInv(items);
+			Bukkit.getLogger().info("Loaded Red Inventory");
 		}catch(Exception e) {Bukkit.getLogger().info("Red Inventory wasn't saved correctly. Please delete the save files associated with it.");}
 		try {
 			ItemStack[] items = new ItemStack[41];
@@ -90,11 +91,12 @@ public class FileManager {
 				items[i]=(ItemStack)config.get("blueItem"+i);
 			}
 			main.setBlueInv(items);
+			Bukkit.getLogger().info("Loaded Blue Inventory");
 		}catch(Exception e) {Bukkit.getLogger().info("Blue Inventory wasn't saved correctly. Please delete the save files associated with it.");}
 
-		if(config.get("FlagA")!=null){main.getFlagA().setFlag((Location)config.get("FlagA"));}
-		if(config.get("FlagB")!=null){main.getFlagB().setFlag((Location)config.get("FlagB"));}
-		if(config.get("FlagC")!=null){main.getFlagC().setFlag((Location)config.get("FlagC"));}
+		if(config.get("FlagA")!=null){main.getFlagA().setFlag((Location)config.get("FlagA"));Bukkit.getLogger().info("Loaded Flag A");}
+		if(config.get("FlagB")!=null){main.getFlagB().setFlag((Location)config.get("FlagB"));Bukkit.getLogger().info("Loaded Flag B");}
+		if(config.get("FlagC")!=null){main.getFlagC().setFlag((Location)config.get("FlagC"));Bukkit.getLogger().info("Loaded Flag C");}
 	}
 	
 	

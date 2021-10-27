@@ -46,21 +46,6 @@ public class GameListeners implements Listener {
 		event.setCancelled(true);
 	}
 	
-	@EventHandler
-	public void onPlayerHit(EntityDamageByEntityEvent event) {
-		if((event.getEntity()instanceof Player)&&(event.getDamager() instanceof Player)) {
-
-    		ArrayList<Player> red = main.getTeamRed();
-    		ArrayList<Player> blue = main.getTeamBlue();
-    		
-			Player player1 = (Player) event.getDamager();
-			Player player2 = (Player) event.getEntity();
-			
-			if(((blue.contains(player1))&&(blue.contains(player2)))||((red.contains(player1))&&(red.contains(player2)))) {
-				event.setCancelled(true);
-			}
-		}
-	}
 	
 	@EventHandler
 	public void onOpenInventory(InventoryOpenEvent event) {
@@ -93,10 +78,10 @@ public class GameListeners implements Listener {
 			
 
 			if (red.contains(player)) {
-				main.sendToSpawn(player, true);
+				main.getTeamManager().sendToSpawn(player, true);
 			}
 			else if (blue.contains(player)) {
-				main.sendToSpawn(player, false);
+				main.getTeamManager().sendToSpawn(player, false);
 			}
 		}
 	}
@@ -106,10 +91,10 @@ public class GameListeners implements Listener {
 		Player player = event.getPlayer();
 		if((player.getLocation().getBlock().getType().equals(Material.WATER))||(player.getLocation().getBlock().getType().equals(Material.STATIONARY_WATER))) {
 			if(main.getTeamRed().contains(player)) {
-				main.sendToSpawn(player, true);
+				main.getTeamManager().sendToSpawn(player, true);
 			}
 			else {
-				main.sendToSpawn(player, false);
+				main.getTeamManager().sendToSpawn(player, false);
 			}
 		}
 	}

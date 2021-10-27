@@ -114,7 +114,7 @@ public class LobbyListeners implements Listener {
 			event.setCancelled(true);
 
 
-			main.sendToSpawn(player, true);
+			main.getTeamManager().sendToSpawn(player, true);
 			player.teleport(main.getLobbySpawn());
 		}
 	}
@@ -124,9 +124,10 @@ public class LobbyListeners implements Listener {
 		Player player = event.getPlayer();
 		if(player.getLocation().getBlock().getType().equals(Material.WATER)) {
 			
-			main.sendToSpawn(player, false);
+			main.getTeamManager().sendToSpawn(player, false);
 			player.teleport(main.getLobbySpawn());
 		}
 	}
+	
 
 }

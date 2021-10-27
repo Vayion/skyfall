@@ -34,10 +34,12 @@ public class SetSpawn  implements CommandExecutor {
 			case "1":
 				main.setSpawn1(loc);
 				main.getFileManager().setSpawn1(loc);
+				player.sendMessage(ChatColor.GREEN+"Sucessfully set Spawn 1.");
 				break;
 			case "2":
 				main.setSpawn2(loc);
 				main.getFileManager().setSpawn2(loc);
+				player.sendMessage(ChatColor.GREEN+"Sucessfully set Spawn 2.");
 				break;
 
 			default:
