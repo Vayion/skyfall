@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.vayion.skyfall.Main;
 
-public class SetFlag implements CommandExecutor {
+public class SetSpawn  implements CommandExecutor {
 	Main main;
 
-	public SetFlag(Main main) {
+	public SetSpawn(Main main) {
 		this.main = main;
 	}
 	
@@ -31,17 +31,11 @@ public class SetFlag implements CommandExecutor {
 			arg.toLowerCase();
 			
 			switch (arg) {
-			case "a":
-				main.getFlagA().setFlag(loc);
-				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag A.");
+			case "1":
+				main.setSpawn1(loc);
 				break;
-			case "b":
-				main.getFlagB().setFlag(loc);
-				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag B.");
-				break;
-			case "c":
-				main.getFlagC().setFlag(loc);
-				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag C.");
+			case "2":
+				main.setSpawn2(loc);
 				break;
 
 			default:

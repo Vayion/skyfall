@@ -1,4 +1,4 @@
-version: 2.0.0
+version: 2.1.0
 author: Vayion
 name: Skyfall
 main: org.vayion.skyfall.Main
@@ -7,3 +7,5 @@ commands:
   start:
   setFlag:
   joinTeam:
+  setspawn:
+  saveInventory:
