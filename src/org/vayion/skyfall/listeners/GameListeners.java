@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.vayion.skyfall.Main;
 
 public class GameListeners implements Listener {
@@ -94,6 +96,19 @@ public class GameListeners implements Listener {
 				main.sendToSpawn(player, true);
 			}
 			else if (blue.contains(player)) {
+				main.sendToSpawn(player, false);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if((player.getLocation().getBlock().getType().equals(Material.WATER))||(player.getLocation().getBlock().getType().equals(Material.STATIONARY_WATER))) {
+			if(main.getTeamRed().contains(player)) {
+				main.sendToSpawn(player, true);
+			}
+			else {
 				main.sendToSpawn(player, false);
 			}
 		}

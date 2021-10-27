@@ -33,9 +33,11 @@ public class SetSpawn  implements CommandExecutor {
 			switch (arg) {
 			case "1":
 				main.setSpawn1(loc);
+				main.getFileManager().setSpawn1(loc);
 				break;
 			case "2":
 				main.setSpawn2(loc);
+				main.getFileManager().setSpawn2(loc);
 				break;
 
 			default:

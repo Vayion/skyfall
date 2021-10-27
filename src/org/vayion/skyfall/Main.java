@@ -21,6 +21,7 @@ import org.vayion.skyfall.arenas.Flag.Status;
 import org.vayion.skyfall.commands.JoinTeam;
 import org.vayion.skyfall.commands.SaveInventory;
 import org.vayion.skyfall.commands.SetFlag;
+import org.vayion.skyfall.commands.SetLobbySpawn;
 import org.vayion.skyfall.commands.SetSpawn;
 import org.vayion.skyfall.commands.StartCmd;
 import org.vayion.skyfall.listeners.GameListeners;
@@ -43,6 +44,7 @@ public class Main extends JavaPlugin {
 	
 	private Location spawn1;
 	private Location spawn2;
+	private Location lobbySpawn;
 	
 	private int scoreRed;
 	private int scoreBlue;
@@ -50,16 +52,25 @@ public class Main extends JavaPlugin {
 	private boolean finished = false;
 	
 
-	ItemStack[] blueInv;
-	ItemStack[] redInv;
+	private ItemStack[] blueInv;
+	private ItemStack[] redInv;
+	private FileManager fileManager;
+	
 	
 	@Override
 	public void onEnable() {
+		
+		
+		if(!getDataFolder().exists()) {
+			getDataFolder().mkdirs();
+		}
+		
 		this.getCommand("joinTeam").setExecutor(new JoinTeam(this));
 		this.getCommand("setflag").setExecutor(new SetFlag(this));
 		this.getCommand("start").setExecutor(new StartCmd(this));
 		this.getCommand("saveInventory").setExecutor(new SaveInventory(this));
 		this.getCommand("setSpawn").setExecutor(new SetSpawn(this));
+		this.getCommand("setLobbySpawn").setExecutor(new SetLobbySpawn(this));
 		
 		
 		red = new ArrayList<Player>();
@@ -85,6 +96,21 @@ public class Main extends JavaPlugin {
 		scoreBlue = 0;
 		scoreRed = 0;
 		started = false;
+		
+		fileManager = new FileManager(this);
+		fileManager.loadArena();
+	}
+	
+	@Override
+	public void onDisable() {
+		System.out.println("[Skyfall] Saving Locations");
+		
+		if(Math.random() < 0.5) {
+			fileManager.setSpawn1(spawn2);
+		}else {fileManager.setSpawn2(spawn1);}
+
+		fileManager.save();
+		
 	}
 	
 	public void addToBlue(Player player) {
@@ -110,10 +136,13 @@ public class Main extends JavaPlugin {
 		flagB.checkflags();
 		flagC.checkflags();
 		
+		doSpawnFlips();
+		
 		started = true;
 		
 		manageScoreboard();
 		manageScore();
+		HandlerList.unregisterAll(lobbyListeners);
 		this.getServer().getPluginManager().registerEvents(gameListeners, this);
 		
 		for (int r = 0; r < red.size(); r++) {
@@ -121,10 +150,10 @@ public class Main extends JavaPlugin {
 		}
    		 
    	 	for (int b = 0; b < blue.size(); b++) {
-   	 		sendToSpawn(blue.get(b), true);
+   	 		sendToSpawn(blue.get(b), false);
    	 	}
 
-		
+		lobbyListeners.disableEdit();
 		
 		
 		return true;
@@ -188,6 +217,9 @@ public class Main extends JavaPlugin {
 	
 	public void setBlueInv(PlayerInventory inventory) {blueInv = inventory.getContents();}
 	public void setRedInv(PlayerInventory inventory) {redInv = inventory.getContents();}
+
+	public void setBlueInv(ItemStack[] items) {blueInv = items;}
+	public void setRedInv(ItemStack[] items) {redInv = items;}
 	
 	public ItemStack[] getBlueInv() {return blueInv;}
 	public ItemStack[] getRedInv() {return redInv;}
@@ -282,6 +314,26 @@ public class Main extends JavaPlugin {
 		player.setFoodLevel(20);
 		player.setFireTicks(0);
 	}
+	
+	public void doSpawnFlips() {
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			public void run() {
+				Location loc = spawn1;
+				spawn1 = spawn2;
+				spawn2 = loc;
+				doSpawnFlips();
+		     }
+		}, (20*30));
+	}
+	
+	public FileManager getFileManager() {return fileManager;}
+	
+	public void setLobby(Location loc) {
+		lobbySpawn = loc;
+	}
+	
+	public Location getLobbySpawn() {return lobbySpawn;}
+	
 	
 	
 }

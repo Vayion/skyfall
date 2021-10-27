@@ -33,14 +33,17 @@ public class SetFlag implements CommandExecutor {
 			switch (arg) {
 			case "a":
 				main.getFlagA().setFlag(loc);
+				main.getFileManager().setFlagA(loc);
 				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag A.");
 				break;
 			case "b":
 				main.getFlagB().setFlag(loc);
+				main.getFileManager().setFlagB(loc);
 				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag B.");
 				break;
 			case "c":
 				main.getFlagC().setFlag(loc);
+				main.getFileManager().setFlagC(loc);
 				player.sendMessage(ChatColor.GREEN+"[Skyfall] Sucessfully set Flag C.");
 				break;
 

@@ -1,4 +1,4 @@
-version: 2.1.0
+version: 2.2
 author: Vayion
 name: Skyfall
 main: org.vayion.skyfall.Main
@@ -9,3 +9,5 @@ commands:
   joinTeam:
   setspawn:
   saveInventory:
+  toggleedit:
+  setLobbySpawn:

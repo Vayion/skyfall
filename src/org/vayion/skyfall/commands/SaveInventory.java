@@ -26,9 +26,13 @@ public class SaveInventory implements CommandExecutor{
 			
 			if(argument.equals("red")) {
 				main.setRedInv(player.getInventory());
+				main.getFileManager().setRedInventory(player.getInventory());
+				player.sendMessage(ChatColor.GREEN+"[Skyfall] Successfully set Team Red's inventory");
 			}
 			else if(argument.equals("blue")) {
 				main.setBlueInv(player.getInventory());
+				main.getFileManager().setBlueInventory(player.getInventory());
+				player.sendMessage(ChatColor.GREEN+"[Skyfall] Successfully set Team Blue's inventory");
 			}
 		}
 		return false;
