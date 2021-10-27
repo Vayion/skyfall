@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.vayion.skyfall.Main;
 
-public class SetSpawn  implements CommandExecutor {
+public class SetSpectatorSpawn implements CommandExecutor {
 	Main main;
 
-	public SetSpawn(Main main) {
+	public SetSpectatorSpawn(Main main) {
 		this.main = main;
 	}
 	
@@ -24,28 +24,12 @@ public class SetSpawn  implements CommandExecutor {
 			Player player = (Player) sender;
 			if(!player.hasPermission("skyfall.admin")) {player.sendMessage(ChatColor.RED+"You don't have the required permissions to do this.");}
 
-			if(args.length==0) {player.sendMessage(ChatColor.RED+ "[Skyfall] Missing Args.");return false;}
 			Location loc = player.getLocation();
 			
-			String arg = args[0];
 			
-			arg.toLowerCase();
-			
-			switch (arg) {
-			case "1":
-				main.setSpawn1(loc);
-				main.getFileManager().setSpawn1(loc);
-				player.sendMessage(ChatColor.GREEN+"Sucessfully set Spawn 1.");
-				break;
-			case "2":
-				main.setSpawn2(loc);
-				main.getFileManager().setSpawn2(loc);
-				player.sendMessage(ChatColor.GREEN+"Sucessfully set Spawn 2.");
-				break;
-
-			default:
-				player.sendMessage(ChatColor.RED+ "[Skyfall] Arguments are invalid.");return false;
-			}
+			main.setSpecSpawn(loc);
+			main.getFileManager().setSpecSpawn(loc);
+			player.sendMessage(ChatColor.GREEN+"Sucessfully set Spectator Spawn.");
 			
 			return true;
 		}

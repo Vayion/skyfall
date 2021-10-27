@@ -18,7 +18,8 @@ public class SetLobbySpawn implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] arg3) {
 		if(!(sender instanceof Player)) {
-			Bukkit.getLogger().info("This command can't in console");
+			Bukkit.getLogger().info("This command can't be used in console");
+			return false;
 		}
 		
 		Player player = (Player) sender;

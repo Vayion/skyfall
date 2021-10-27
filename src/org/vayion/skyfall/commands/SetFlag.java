@@ -22,6 +22,7 @@ public class SetFlag implements CommandExecutor {
 		if(sender instanceof Player) {
 			
 			Player player = (Player) sender;
+			if(!player.hasPermission("skyfall.admin")) {player.sendMessage(ChatColor.RED+"You don't have the required permissions to do this.");}
 
 			if(args.length==0) {player.sendMessage(ChatColor.RED+ "[Skyfall] Missing Args.");return false;}
 			Location loc = player.getLocation();

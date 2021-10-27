@@ -20,6 +20,7 @@ public class SaveInventory implements CommandExecutor{
 		if(args.length==0) {return false;}
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
+			if(!player.hasPermission("skyfall.admin")) {player.sendMessage(ChatColor.RED+"You don't have the required permissions to do this.");}
 			if(main.getStarted()) {player.sendMessage(ChatColor.RED + "The game already started, you can't do this.");}
 			String argument = args[0].toLowerCase();
 			

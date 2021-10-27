@@ -1,4 +1,4 @@
-version: 2.3
+version: 2.4
 author: Vayion
 name: Skyfall
 main: org.vayion.skyfall.Main
@@ -11,3 +11,4 @@ commands:
   saveInventory:
   toggleedit:
   setLobbySpawn:
+  setSpecSpawn:

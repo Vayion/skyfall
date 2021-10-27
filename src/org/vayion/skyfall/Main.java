@@ -22,9 +22,11 @@ import org.vayion.skyfall.commands.SaveInventory;
 import org.vayion.skyfall.commands.SetFlag;
 import org.vayion.skyfall.commands.SetLobbySpawn;
 import org.vayion.skyfall.commands.SetSpawn;
+import org.vayion.skyfall.commands.SetSpectatorSpawn;
 import org.vayion.skyfall.commands.StartCmd;
 import org.vayion.skyfall.listeners.GameListeners;
 import org.vayion.skyfall.listeners.LobbyListeners;
+import org.vayion.skyfall.listeners.PostGameManager;
 
 public class Main extends JavaPlugin {
 	private boolean started;
@@ -42,9 +44,12 @@ public class Main extends JavaPlugin {
 	private Location spawn1;
 	private Location spawn2;
 	private Location lobbySpawn;
+	private Location spectatorSpawn;
 	
 	private int scoreRed;
 	private int scoreBlue;
+
+	private Main main = this;
 	
 	private boolean finished = false;
 	
@@ -67,6 +72,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("saveInventory").setExecutor(new SaveInventory(this));
 		this.getCommand("setSpawn").setExecutor(new SetSpawn(this));
 		this.getCommand("setLobbySpawn").setExecutor(new SetLobbySpawn(this));
+		this.getCommand("setSpecSpawn").setExecutor(new SetSpectatorSpawn(this));
 		
 		
 		
@@ -83,6 +89,12 @@ public class Main extends JavaPlugin {
 		scoreboard = sManager.getNewScoreboard();
 		objective = scoreboard.registerNewObjective(ChatColor.GREEN+"Skyfall", "dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+		Score score1 = objective.getScore(ChatColor.GOLD+"----- ----");
+		Score score2 = objective.getScore(ChatColor.YELLOW+"Game is about to start.");
+		Score score3 = objective.getScore(ChatColor.GOLD+"----------");
+		score1.setScore(1);
+		score2.setScore(2);
+		score3.setScore(3);
 		teamManager = new TeamManager(this);
 		
 		
@@ -167,16 +179,25 @@ public class Main extends JavaPlugin {
 		    	 
 		    	 if((scoreBlue>=100)&&(scoreRed>=100)){
 		    		 Bukkit.broadcastMessage("Its a Tie."); 
+		    		 PostGameManager post = new PostGameManager(main, new ArrayList<Player>());
+		    		 HandlerList.unregisterAll(gameListeners);
+		    		 main.getServer().getPluginManager().registerEvents(post, main);
 		    		 finish();
 		    		 return;
 		    	 }
 		    	 if(scoreBlue>= 100) {
-		    		 Bukkit.broadcastMessage("Blue Wins!");
+		    		 Bukkit.broadcastMessage(ChatColor.BLUE+"Team Blue Wins!");
+		    		 PostGameManager post = new PostGameManager(main, getTeamBlue());
+		    		 HandlerList.unregisterAll(gameListeners);
+		    		 main.getServer().getPluginManager().registerEvents(post, main);
 		    		 finish();
 		    		 return;
 	    		 }
 		    	 if(scoreRed>= 100) {
-		    		 Bukkit.broadcastMessage("Red Wins!");
+		    		 Bukkit.broadcastMessage(ChatColor.RED+"Team Red Wins!");
+		    		 PostGameManager post = new PostGameManager(main, getTeamRed());
+		    		 HandlerList.unregisterAll(gameListeners);
+		    		 main.getServer().getPluginManager().registerEvents(post, main);
 		    		 finish();
 		    		 return;
 	    		 }
@@ -210,6 +231,9 @@ public class Main extends JavaPlugin {
 	
 	public Location getSpawn1() {return spawn1;}
 	public Location getSpawn2() {return spawn2;}
+	
+	public void setSpecSpawn(Location loc) {spectatorSpawn = loc;}
+	public Location getSpectatorSpawn() {return spectatorSpawn;}
 	
 	public ArrayList<Player> getTeamRed(){return teamManager.getRed();}
 	public ArrayList<Player> getTeamBlue(){return teamManager.getBlue();}

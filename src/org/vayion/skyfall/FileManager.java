@@ -23,11 +23,7 @@ public class FileManager {
 		file = new File(main.getDataFolder(), "arena.yml");
 		config = (FileConfiguration)YamlConfiguration.loadConfiguration(file);
 		if(file.exists()) {
-			Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-			     public void run() {
-						loadArena();
-			     }
-			}, (40));
+			loadArena();
 		}
 		else {
 			try {
@@ -46,6 +42,7 @@ public class FileManager {
 	public void setFlagA(Location loc) {config.set("FlagA", loc);}
 	public void setFlagB(Location loc) {config.set("FlagB", loc);}
 	public void setFlagC(Location loc) {config.set("FlagC", loc);}
+	public void setSpecSpawn(Location loc) {config.set("SpecSpawn", loc);}
 	
 	public void setRedInventory(PlayerInventory inv) {
 		ItemStack[] items = inv.getContents();
@@ -97,6 +94,7 @@ public class FileManager {
 		if(config.get("FlagA")!=null){main.getFlagA().setFlag((Location)config.get("FlagA"));Bukkit.getLogger().info("Loaded Flag A");}
 		if(config.get("FlagB")!=null){main.getFlagB().setFlag((Location)config.get("FlagB"));Bukkit.getLogger().info("Loaded Flag B");}
 		if(config.get("FlagC")!=null){main.getFlagC().setFlag((Location)config.get("FlagC"));Bukkit.getLogger().info("Loaded Flag C");}
+		if(config.get("SpecSpawn")!=null){main.setSpecSpawn((Location)config.get("SpecSpawn"));Bukkit.getLogger().info("Loaded Spectator Spawn");}
 	}
 	
 	
