@@ -1,0 +1,17 @@
+name: YSpigotSkyfall
+version: 1.0
+author: YodaSoda_HD
+main: me.YodaSoda_HD.YSpigotSkyfall.Main
+description: YodaSoda_HD's super cool Spigot Plugin!
+
+commands:
+  class: 
+    usuage: /command <class>
+    description: Choose your Kit
+  listplayers: 
+    description: list all Players in the game
+  listTeams: 
+    description: list all Teams in the game
+  teamMembers: 
+    description: list all Players in the team
+    usuage: /command <team>
