@@ -1,17 +1,10 @@
 name: YSpigotSkyfall
-version: 1.0
+version: 1.0.1
 author: YodaSoda_HD
-main: me.YodaSoda_HD.YSpigotSkyfall.Main
-description: YodaSoda_HD's super cool Spigot Plugin!
+main: org.YodaSoda_HD.YSpigotSkyfall.Main
+description: The second version of YodaSoda's own Gamemode.
 
 commands:
-  class: 
-    usuage: /command <class>
-    description: Choose your Kit
-  listplayers: 
-    description: list all Players in the game
-  listTeams: 
-    description: list all Teams in the game
-  teamMembers: 
-    description: list all Players in the team
-    usuage: /command <team>
+  listPlayers: 
+    description: list all Players
+  skyfalladmin:
