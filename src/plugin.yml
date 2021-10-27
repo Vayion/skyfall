@@ -1,10 +1,9 @@
-name: YSpigotSkyfall
-version: 1.0.1
-author: YodaSoda_HD
-main: org.YodaSoda_HD.YSpigotSkyfall.Main
-description: The second version of YodaSoda's own Gamemode.
+version: 2.0.0
+author: Vayion
+name: Skyfall
+main: org.vayion.skyfall.Main
 
 commands:
-  listPlayers: 
-    description: list all Players
-  skyfalladmin:
+  start:
+  setFlag:
+  joinTeam:
