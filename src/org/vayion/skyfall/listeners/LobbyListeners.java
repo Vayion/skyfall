@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -75,6 +76,18 @@ public class LobbyListeners implements Listener {
 		event.getPlayer().sendMessage(ChatColor.RED+"You can't do this here.");
 		event.setCancelled(true);
 	}
+	
+
+	@EventHandler
+    public void serverListPing(ServerListPingEvent event){
+		if(main.getTeamManager().getAmountPlayers()<12) {
+			event.setMotd(ChatColor.GREEN+"Waiting.");	
+		}
+		else {
+			event.setMotd(ChatColor.RED+"Game is already full.");	
+		}
+    }
+	
 
 	@EventHandler
 	public void onPlayerDrop(PlayerDropItemEvent event) {

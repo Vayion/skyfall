@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -23,6 +24,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.vayion.skyfall.Main;
 
 public class GameListeners implements Listener {
@@ -52,6 +55,14 @@ public class GameListeners implements Listener {
 		event.setCancelled(true);
 	}
 	
+	@EventHandler
+	public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+		if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+			return;
+		}
+		event.setCancelled(true);
+		main.getDjmpMain().handleDoubleJump(event.getPlayer());
+	}
 	
 	@EventHandler
 	public void onOpenInventory(InventoryOpenEvent event) {
@@ -151,6 +162,11 @@ public class GameListeners implements Listener {
 	}
 	
 	@EventHandler
+    public void serverListPing(ServerListPingEvent event){
+		event.setMotd(ChatColor.RED+"Already started!");
+    }
+	
+	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
 		if((player.getLocation().getBlock().getType().equals(Material.WATER))||(player.getLocation().getBlock().getType().equals(Material.STATIONARY_WATER))) {
@@ -161,6 +177,11 @@ public class GameListeners implements Listener {
 				main.getTeamManager().sendToSpawn(player, false);
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if(event.getSlot()==8) {event.setCancelled(true);}
 	}
 	
 	private String getColor(Player player) {

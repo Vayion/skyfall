@@ -1,4 +1,4 @@
-version: 2.4
+version: 3.1
 author: Vayion
 name: Skyfall
 main: org.vayion.skyfall.Main
@@ -12,3 +12,4 @@ commands:
   toggleedit:
   setLobbySpawn:
   setSpecSpawn:
+  selectClass:

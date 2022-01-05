@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
+import org.vayion.skyfall.classes.ClassManager;
 
 public class TeamManager {
 	
@@ -24,6 +24,15 @@ public class TeamManager {
 
 	private ItemStack[] blueInv;
 	private ItemStack[] redInv;
+
+	private ItemStack[] tankBlueInv;
+	private ItemStack[] tankRedInv;
+
+	private ItemStack[] archBlueInv;
+	private ItemStack[] archRedInv;
+
+	private ItemStack[] assBlueInv;
+	private ItemStack[] assRedInv;
 	
 	Main main;
 	
@@ -61,6 +70,7 @@ public class TeamManager {
 		if (red.contains(player)) {red.remove(player);redTeam.removePlayer(player);}
 		if (blue.contains(player)) {blue.remove(player);blueTeam.removePlayer(player);}
 		if (teamless.contains(player)) {teamless.remove(player);}
+		main.getDjmpMain().removePlayer(player);
 	}
 	
 	public void addToTeamless(Player player) {
@@ -130,8 +140,37 @@ public class TeamManager {
 	}
 	
 	
-	public void setBlueInv(ItemStack[] items) {blueInv = items;}
-	public void setRedInv(ItemStack[] items) {redInv = items;}
+	public void setDefaultInventory(ItemStack[] items) {
+		//TODO: Copy in copy
+		Bukkit.broadcastMessage("Setting default inventory");
+		
+		redInv = Utils.dyeShit(items.clone(), true);
+		blueInv = Utils.dyeShit(items.clone(), false);
+	}
+
+	public void setAssInventory(ItemStack[] items) {
+		//TODO: Copy in copy
+		Bukkit.broadcastMessage("Setting Assassin inventory");
+		
+		assRedInv = Utils.dyeShit(items.clone(), true);
+		assBlueInv = Utils.dyeShit(items.clone(), false);
+	}
+
+	public void setArchInventory(ItemStack[] items) {
+		//TODO: Copy in copy
+		Bukkit.broadcastMessage("Setting Archer inventory");
+		
+		archRedInv = Utils.dyeShit(items.clone(), true);
+		archBlueInv = Utils.dyeShit(items.clone(), false);
+	}
+
+	public void setTankInventory(ItemStack[] items) {
+		//TODO: Copy in copy
+		Bukkit.broadcastMessage("Setting Tank inventory");
+		
+		tankRedInv = Utils.dyeShit(items.clone(), true);
+		tankBlueInv = Utils.dyeShit(items.clone(), false);
+	}
 	
 	public ItemStack[] getBlueInv() {return blueInv;}
 	public ItemStack[] getRedInv() {return redInv;}
@@ -142,14 +181,23 @@ public class TeamManager {
 	 * true = red, false = blue
 	 */
 	public void sendToSpawn(Player player, boolean red) {
+		ClassManager classes = main.getClassManager();
 		player.setGameMode(GameMode.SURVIVAL);
 		if(red) {
-			player.getInventory().setContents(redInv);
+			if(classes.getArchers().contains(player)) {player.getInventory().setContents(archRedInv);}
+			else if(classes.getTanks().contains(player)) {player.getInventory().setContents(tankRedInv);}
+			else if(classes.getAssassins().contains(player)) {player.getInventory().setContents(assRedInv);}
+			else {player.getInventory().setContents(redInv);}
+			
 			player.updateInventory();
 			player.teleport(main.getSpawn1());
 		}
 		else {
-			player.getInventory().setContents(blueInv);
+			if(classes.getArchers().contains(player)) {player.getInventory().setContents(archBlueInv);}
+			else if(classes.getTanks().contains(player)) {player.getInventory().setContents(tankBlueInv);}
+			else if(classes.getAssassins().contains(player)) {player.getInventory().setContents(assBlueInv);}
+			else {player.getInventory().setContents(blueInv);}
+			
 			player.updateInventory();
 			player.teleport(main.getSpawn2());
 		}

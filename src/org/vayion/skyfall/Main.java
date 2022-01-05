@@ -8,7 +8,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -17,6 +16,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.vayion.skyfall.arenas.Flag;
 import org.vayion.skyfall.arenas.Flag.Status;
+import org.vayion.skyfall.classes.ClassManager;
 import org.vayion.skyfall.commands.JoinTeam;
 import org.vayion.skyfall.commands.SaveInventory;
 import org.vayion.skyfall.commands.SetFlag;
@@ -24,6 +24,7 @@ import org.vayion.skyfall.commands.SetLobbySpawn;
 import org.vayion.skyfall.commands.SetSpawn;
 import org.vayion.skyfall.commands.SetSpectatorSpawn;
 import org.vayion.skyfall.commands.StartCmd;
+import org.vayion.skyfall.doubleJumpManagement.DJmpMain;
 import org.vayion.skyfall.listeners.GameListeners;
 import org.vayion.skyfall.listeners.LobbyListeners;
 import org.vayion.skyfall.listeners.PostGameManager;
@@ -57,6 +58,8 @@ public class Main extends JavaPlugin {
 	private FileManager fileManager;
 	private TeamManager teamManager;
 	
+	private DJmpMain djmpMain;
+	private ClassManager classManager;
 	
 	@Override
 	public void onEnable() {
@@ -74,6 +77,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("setLobbySpawn").setExecutor(new SetLobbySpawn(this));
 		this.getCommand("setSpecSpawn").setExecutor(new SetSpectatorSpawn(this));
 		
+		classManager = new ClassManager(this);
 		
 		
 		flagA = new Flag(this);
@@ -82,6 +86,7 @@ public class Main extends JavaPlugin {
 		
 		gameListeners = new GameListeners(this);
 		lobbyListeners = new LobbyListeners(this);
+		djmpMain = new DJmpMain(this);
 		
 		this.getServer().getPluginManager().registerEvents(lobbyListeners, this);
 		
@@ -126,6 +131,7 @@ public class Main extends JavaPlugin {
 	public Scoreboard getScoreboard() {
 		return scoreboard;
 	}
+	public DJmpMain getDjmpMain() {return djmpMain;}
 	
 	
 	public boolean start() {
@@ -147,6 +153,7 @@ public class Main extends JavaPlugin {
 		lobbyListeners.disableEdit();
 		
 		teamManager.start();
+		djmpMain.start();
 		
 		
 		return true;
@@ -217,11 +224,49 @@ public class Main extends JavaPlugin {
 		}, (20));
 	}
 	
-	public void setBlueInv(PlayerInventory inventory) {teamManager.setBlueInv(inventory.getContents());}
-	public void setRedInv(PlayerInventory inventory) {teamManager.setRedInv(inventory.getContents());}
+	/*
+	 * all the different classes are being set here. save Functions are called by command, set by arenaLoader
+	 */
+	public void saveDefaultInv(ItemStack[] items) {
+		teamManager.setDefaultInventory(items);
+		fileManager.setDefaultInventory(items);
+	}
+	public void setDefaultInv(ItemStack[] items) {
+		teamManager.setDefaultInventory(items);
+	}
 
-	public void setBlueInv(ItemStack[] items) {teamManager.setBlueInv(items);}
-	public void setRedInv(ItemStack[] items) {teamManager.setRedInv(items);}
+	
+	public void saveAssInv(ItemStack[] items) {
+		teamManager.setAssInventory(items);
+		fileManager.setAssassinInventory(items);
+	}
+	public void setAssInv(ItemStack[] items) {
+		teamManager.setAssInventory(items);
+	}
+
+	
+	public void saveArchInv(ItemStack[] items) {
+		teamManager.setArchInventory(items);
+		fileManager.setArcherInventory(items);
+	}
+	public void setArchInv(ItemStack[] items) {
+		teamManager.setArchInventory(items);
+	}
+
+	
+	public void saveTankInv(ItemStack[] items) {
+		teamManager.setTankInventory(items);
+		fileManager.setTankInventory(items);
+	}
+	public void setTankInv(ItemStack[] items) {
+		teamManager.setTankInventory(items);
+	}
+	
+	
+	
+	/*
+	 * some get Functions
+	 */
 	
 	public ItemStack[] getBlueInv() {return teamManager.getBlueInv();}
 	public ItemStack[] getRedInv() {return teamManager.getRedInv();}
@@ -324,6 +369,9 @@ public class Main extends JavaPlugin {
 	
 	public TeamManager getTeamManager() {
 		return teamManager;
+	}
+	public ClassManager getClassManager() {
+		return classManager;
 	}
 	
 }

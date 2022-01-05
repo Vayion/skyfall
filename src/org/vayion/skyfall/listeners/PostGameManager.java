@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.vayion.skyfall.Main;
 
 public class PostGameManager implements Listener {
@@ -56,9 +57,11 @@ public class PostGameManager implements Listener {
 		Bukkit.getOnlinePlayers().forEach(player -> player.playSound(player.getLocation(), Sound.RECORD_CHIRP, 10, 1));
 	}
 	
-	
-	
-	
+
+	@EventHandler
+    public void serverListPing(ServerListPingEvent event){
+		event.setMotd(ChatColor.YELLOW+"Just ended!");
+    }
 	
 	
 	@EventHandler

@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public class FileManager {
 	Main main;
@@ -44,16 +47,27 @@ public class FileManager {
 	public void setFlagC(Location loc) {config.set("FlagC", loc);}
 	public void setSpecSpawn(Location loc) {config.set("SpecSpawn", loc);}
 	
-	public void setRedInventory(PlayerInventory inv) {
-		ItemStack[] items = inv.getContents();
+	public void setDefaultInventory(ItemStack[] items) {
 		for (int i = 0; i < 41; i++) {
-			config.set("redItem"+i, items[i]);
+			config.set("defItem"+i, items[i]);
 		}
 	}
-	public void setBlueInventory(PlayerInventory inv) {
-		ItemStack[] items = inv.getContents();
+	
+	public void setTankInventory(ItemStack[] items) {
 		for (int i = 0; i < 41; i++) {
-			config.set("blueItem"+i, items[i]);
+			config.set("tankItem"+i, items[i]);
+		}
+	}
+	
+	public void setArcherInventory(ItemStack[] items) {
+		for (int i = 0; i < 41; i++) {
+			config.set("archItem"+i, items[i]);
+		}
+	}
+	
+	public void setAssassinInventory(ItemStack[] items) {
+		for (int i = 0; i < 41; i++) {
+			config.set("assItem"+i, items[i]);
 		}
 	}
 	
@@ -77,20 +91,49 @@ public class FileManager {
 		try {
 			ItemStack[] items = new ItemStack[41];
 			for (int i = 0; i < 41; i++) {
-				items[i]=(ItemStack)config.get("redItem"+i);
+				items[i]=(ItemStack)config.get("defItem"+i);
 			}
-			main.setRedInv(items);
-			Bukkit.getLogger().info("Loaded Red Inventory");
-		}catch(Exception e) {Bukkit.getLogger().info("Red Inventory wasn't saved correctly. Please delete the save files associated with it.");}
+			main.setDefaultInv(items);
+			Bukkit.getLogger().info("Loaded Default Inventory");
+		}catch(Exception e) {
+			Bukkit.getLogger().info("Default Inventory wasn't saved correctly. Please delete the save files associated with it.");
+		}
+
 		try {
 			ItemStack[] items = new ItemStack[41];
 			for (int i = 0; i < 41; i++) {
-				items[i]=(ItemStack)config.get("blueItem"+i);
+				items[i]=(ItemStack)config.get("archItem"+i);
 			}
-			main.setBlueInv(items);
-			Bukkit.getLogger().info("Loaded Blue Inventory");
-		}catch(Exception e) {Bukkit.getLogger().info("Blue Inventory wasn't saved correctly. Please delete the save files associated with it.");}
+			main.setArchInv(items);
+			Bukkit.getLogger().info("Loaded Archer Inventory");
+		}catch(Exception e) {
+			Bukkit.getLogger().info("Archer Inventory wasn't saved correctly. Please delete the save files associated with it.");
+		}
 
+
+		try {
+			ItemStack[] items = new ItemStack[41];
+			for (int i = 0; i < 41; i++) {
+				items[i]=(ItemStack)config.get("assItem"+i);
+			}
+			main.setAssInv(items);
+			Bukkit.getLogger().info("Loaded Assassin Inventory");
+		}catch(Exception e) {
+			Bukkit.getLogger().info("Assassin Inventory wasn't saved correctly. Please delete the save files associated with it.");
+		}
+
+
+		try {
+			ItemStack[] items = new ItemStack[41];
+			for (int i = 0; i < 41; i++) {
+				items[i]=(ItemStack)config.get("tankItem"+i);
+			}
+			main.setTankInv(items);
+			Bukkit.getLogger().info("Loaded Tank Inventory");
+		}catch(Exception e) {
+			Bukkit.getLogger().info("Tank Inventory wasn't saved correctly. Please delete the save files associated with it.");
+		}
+		
 		if(config.get("FlagA")!=null){main.getFlagA().setFlag((Location)config.get("FlagA"));Bukkit.getLogger().info("Loaded Flag A");}
 		if(config.get("FlagB")!=null){main.getFlagB().setFlag((Location)config.get("FlagB"));Bukkit.getLogger().info("Loaded Flag B");}
 		if(config.get("FlagC")!=null){main.getFlagC().setFlag((Location)config.get("FlagC"));Bukkit.getLogger().info("Loaded Flag C");}

@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -42,7 +43,6 @@ public class Flag {
 		new Location(loc.getWorld(), loc.getX(), loc.getY()-1, loc.getZ()).getBlock().setType(Material.STAINED_GLASS);
 		new Location(loc.getWorld(), loc.getX(), loc.getY()-1, loc.getZ()).getBlock().setData((byte)5);
 	}
-	
 	public void checkflags() {
 		//Bukkit.broadcastMessage("Checking for Coordinates");
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
